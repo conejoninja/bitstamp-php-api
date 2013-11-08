@@ -18,7 +18,7 @@ class BitStampAPI {
      * @return mixed (json)
      */
     public function ticker() {
-        return $this->_doRequest('ticker');
+        return $this->_doRequest('ticker', array(), 'get');
     }
 
     /**
@@ -202,7 +202,7 @@ class BitStampAPI {
      * @param array $params
      * @return array (json)
      */
-    private function _doRequest($action, array $params = array()) {
+    private function _doRequest($action, array $params = array(), $method = 'post') {
         $time = explode(" ", microtime());
         $nonce = $time[1].substr($time[0], 2, 6);
         $params['nonce'] = $nonce;
@@ -217,6 +217,7 @@ class BitStampAPI {
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         }
         curl_setopt($curl, CURLOPT_URL, 'https://www.bitstamp.net/api/'.$action.'/');
+        if($method=='get') { curl_setopt($curl, CURLOPT_POST, false); }
         curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
